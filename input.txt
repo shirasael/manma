@@ -1,0 +1,7 @@
+InsertBox(4,4)
+InsertBox(4,3)
+InsertBox(2,5)
+CheckBox(2,3)
+GetBox(2,3)
+RemoveBox(4,4)
+GetMedianBox()
