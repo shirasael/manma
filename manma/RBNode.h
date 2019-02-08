@@ -2,15 +2,15 @@
 #include <memory>
 
 namespace rb_tree {
-	enum Color {
+	enum class Color : int{
 		Black,
 		Red
 	};
 
 	class RBNode {
 	public:
-		RBNode(Color color);
-		RBNode(Color color, const std::shared_ptr<RBNode> parent);
+		RBNode();
+		explicit RBNode(Color color);
 		virtual ~RBNode() = default;
 
 		virtual int getValue() const = 0;
@@ -20,6 +20,24 @@ namespace rb_tree {
 		std::shared_ptr<RBNode> left;
 		std::shared_ptr<RBNode> right;
 	};
+
+
+	class SimpleRBNode final : public RBNode {
+	public:
+		explicit SimpleRBNode(int value);
+		int getValue() const override;
+		int value;
+	};
+
+
+	class SentinelRBNode final : public RBNode {
+	public:
+		const int SENTINEL = 0xFFFFFFFF;
+
+		SentinelRBNode();
+		int getValue() const override { return SENTINEL; };
+	};
+
 
 }
 

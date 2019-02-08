@@ -1,6 +1,13 @@
 #include "RBNode.h"
 
 namespace rb_tree {
+	RBNode::RBNode() : color(Color::Red) {}
+
 	RBNode::RBNode(Color color) : color(color) {}
-	RBNode::RBNode(Color color, const std::shared_ptr<RBNode> parent) : color(color), parent(parent) {}
+
+	SimpleRBNode::SimpleRBNode(int value) : RBNode(), value(value) {}
+	int SimpleRBNode::getValue() const {
+		return value;
+	}
+	SentinelRBNode::SentinelRBNode() : RBNode(Color::Black) {}
 }
