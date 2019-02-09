@@ -112,11 +112,11 @@ namespace rb_tree {
 				} else {
 					if (z == z->parent->left) {
 						z = z->parent;
-						rotateLeft(z);
+						rotateRight(z);
 					}
 					z->parent->color = Color::Black;
 					z->parent->parent->color = Color::Red;
-					rotateRight(z->parent->parent);
+					rotateLeft(z->parent->parent);
 				}
 			}
 		}

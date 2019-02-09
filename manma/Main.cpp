@@ -10,25 +10,26 @@ using namespace rb_tree;
 
 void testRBTree() {
 	RBTree tree;
-	tree.insert(std::make_shared<SimpleRBNode>(7));
-	tree.insert(std::make_shared<SimpleRBNode>(1));
-	tree.insert(std::make_shared<SimpleRBNode>(10));
-	tree.insert(std::make_shared<SimpleRBNode>(5));
-	tree.insert(std::make_shared<SimpleRBNode>(8));
-	tree.insert(std::make_shared<SimpleRBNode>(2));
-	tree.insert(std::make_shared<SimpleRBNode>(9));
-	tree.insert(std::make_shared<SimpleRBNode>(6));
-	tree.insert(std::make_shared<SimpleRBNode>(11));
-	tree.insert(std::make_shared<SimpleRBNode>(3));
 	tree.insert(std::make_shared<SimpleRBNode>(12));
+	tree.insert(std::make_shared<SimpleRBNode>(11));
+	tree.insert(std::make_shared<SimpleRBNode>(10));
+	tree.insert(std::make_shared<SimpleRBNode>(9));
+	tree.insert(std::make_shared<SimpleRBNode>(8));
+	tree.insert(std::make_shared<SimpleRBNode>(7));
+	tree.insert(std::make_shared<SimpleRBNode>(6));
+	tree.insert(std::make_shared<SimpleRBNode>(5));
+	tree.insert(std::make_shared<SimpleRBNode>(5));
 	tree.insert(std::make_shared<SimpleRBNode>(4));
+	tree.insert(std::make_shared<SimpleRBNode>(3));
+	tree.insert(std::make_shared<SimpleRBNode>(2));
+	tree.insert(std::make_shared<SimpleRBNode>(1));
 	tree.printInorder();
 	tree.printPreorder();
 }
 
 
 int main(int argc, char *argv[]) {
-	// testRBTree();
+	testRBTree();
 
 	if (argc != ARGS_COUNT) {
 		PRINT("Usage: manma.exe <input_file_path>");
