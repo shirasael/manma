@@ -31,7 +31,34 @@ namespace rb_tree {
 		insertFixup(z);
 	}
 
-	void RBTree::remove(const std::shared_ptr<RBNode> z) {
+	std::shared_ptr<RBNode> RBTree::remove(std::shared_ptr<RBNode> z) {
+		std::shared_ptr<RBNode> y;
+		std::shared_ptr<RBNode> x;
+		if (z->left == nil || z->right == nil) {
+			y = z;
+		} else {
+			y = successor(z);
+		}
+		if (y->left != nil) {
+			x = y->left;
+		} else {
+			x = y->right;
+		}
+		x->parent = y->parent;
+		if (y->parent == nil) {
+			root = x;
+		} else if (y == y->parent->left) {
+			y->parent->left = x;
+		} else {
+			y->parent->right = x;
+		}
+		if (y != z) {
+			z->copyData(y);
+		}
+		if (y->color == Color::Black) {
+			removeFixup(x);
+		}
+		return y;
 	}
 
 	void RBTree::printInorder() const {
@@ -46,6 +73,27 @@ namespace rb_tree {
 	
 	std::shared_ptr<RBNode> RBTree::search(int value) const {
 		return std::shared_ptr<RBNode>();
+	}
+
+	std::shared_ptr<RBNode> RBTree::successor(const std::shared_ptr<RBNode> x) const {
+		if (x->right != nil) {
+			return treeMinimum(x->right);
+		}
+		auto y = x->parent;
+		auto w = x;
+		while (y != nil && w == y->right) {
+			w = y;
+			y = y->parent;
+		}
+		return y;
+	}
+
+	std::shared_ptr<RBNode> RBTree::treeMinimum(const std::shared_ptr<RBNode> x) const {
+		auto w = x;
+		while (w->left != nil) {
+			w = w->left;
+		}
+		return w;
 	}
 
 	void RBTree::rotateLeft(const std::shared_ptr<RBNode> x) {
@@ -122,6 +170,61 @@ namespace rb_tree {
 		}
 
 		root->color = Color::Black;
+	}
+
+	void RBTree::removeFixup(std::shared_ptr<RBNode> x) {
+		while (x != root && x->color == Color::Black) {
+			std::shared_ptr<RBNode> w;
+			if (x == x->parent->left) {
+				w = x->parent->right;
+				if (w->color == Color::Red) {
+					w->color = Color::Black;
+					x->parent->color = Color::Red;
+					rotateLeft(x->parent);
+					w = x->parent->right;
+				}
+				if (w->left->color == Color::Black && w->right->color == Color::Black) {
+					w->color = Color::Red;
+					x = x->parent;
+				} else { 
+					if (w->right->color == Color::Black) {
+						w->left->color = Color::Black;
+						w->color = Color::Red;
+						rotateRight(w);
+						w = x->parent->right;
+					}
+					w->color = x->parent->color;
+					x->parent->color = Color::Black;
+					w->right->color = Color::Black;
+					rotateLeft(x->parent);
+					x = root;
+				}
+			} else if (x == x->parent->right) {
+				w = x->parent->left;
+				if (w->color == Color::Red) {
+					w->color = Color::Black;
+					x->parent->color = Color::Red;
+					rotateRight(x->parent);
+					w = x->parent->left;
+				}
+				if (w->right->color == Color::Black && w->left->color == Color::Black) {
+					w->color = Color::Red;
+					x = x->parent;
+				} else {
+					if (w->left->color == Color::Black) {
+						w->right->color = Color::Black;
+						w->color = Color::Red;
+						rotateLeft(w);
+						w = x->parent->left;
+					}
+					w->color = x->parent->color;
+					x->parent->color = Color::Black;
+					w->right->color = Color::Black;
+					rotateRight(x->parent);
+					x = root;
+				}
+			}
+		}
 	}
 
 	void RBTree::printInorder(const std::shared_ptr<RBNode> x) const {

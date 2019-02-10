@@ -10,12 +10,14 @@ using namespace rb_tree;
 
 void testRBTree() {
 	RBTree tree;
+	auto a = std::make_shared<SimpleRBNode>(10);
+	auto b = std::make_shared<SimpleRBNode>(7);
 	tree.insert(std::make_shared<SimpleRBNode>(12));
 	tree.insert(std::make_shared<SimpleRBNode>(11));
-	tree.insert(std::make_shared<SimpleRBNode>(10));
+	tree.insert(a);
 	tree.insert(std::make_shared<SimpleRBNode>(9));
 	tree.insert(std::make_shared<SimpleRBNode>(8));
-	tree.insert(std::make_shared<SimpleRBNode>(7));
+	tree.insert(b);
 	tree.insert(std::make_shared<SimpleRBNode>(6));
 	tree.insert(std::make_shared<SimpleRBNode>(5));
 	tree.insert(std::make_shared<SimpleRBNode>(5));
@@ -23,6 +25,11 @@ void testRBTree() {
 	tree.insert(std::make_shared<SimpleRBNode>(3));
 	tree.insert(std::make_shared<SimpleRBNode>(2));
 	tree.insert(std::make_shared<SimpleRBNode>(1));
+	tree.printInorder();
+	tree.printPreorder();
+	PRINT("----------------------");
+	tree.remove(a);
+	tree.remove(b);
 	tree.printInorder();
 	tree.printPreorder();
 }

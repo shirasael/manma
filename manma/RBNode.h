@@ -14,6 +14,7 @@ namespace rb_tree {
 		virtual ~RBNode() = default;
 
 		virtual int getValue() const = 0;
+		virtual void copyData(const std::shared_ptr<RBNode>& other) {};
 
 		Color color;
 		std::shared_ptr<RBNode> parent;
@@ -26,6 +27,7 @@ namespace rb_tree {
 	public:
 		explicit SimpleRBNode(int value);
 		int getValue() const override;
+		void copyData(const std::shared_ptr<RBNode>& other) override;
 		int value;
 	};
 
@@ -37,7 +39,6 @@ namespace rb_tree {
 		SentinelRBNode();
 		int getValue() const override { return SENTINEL; };
 	};
-
 
 }
 
