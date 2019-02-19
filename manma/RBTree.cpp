@@ -72,7 +72,15 @@ namespace rb_tree {
 	}
 	
 	std::shared_ptr<RBNode> RBTree::search(int value) const {
-		return std::shared_ptr<RBNode>();
+		auto x = root;
+		while (x != nil && value != x->getValue()) {
+			if (value < x->getValue()) {
+				x = x->left;
+			} else {
+				x = x->right;
+			}
+		}
+		return x == nil ? nullptr : x;
 	}
 
 	std::shared_ptr<RBNode> RBTree::successor(const std::shared_ptr<RBNode> x) const {

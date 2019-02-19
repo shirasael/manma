@@ -32,6 +32,12 @@ void testRBTree() {
 	tree.remove(b);
 	tree.printInorder();
 	tree.printPreorder();
+	PRINT("Fininding 4...");
+	auto x = tree.search(4);
+	PRINT("Found: %p", x.get());
+	PRINT("Finding 532...");
+	x = tree.search(532);
+	PRINT("Found: %p", x.get());
 }
 
 
