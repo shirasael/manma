@@ -8,23 +8,30 @@ const int ARGS_COUNT = 2;
 
 using namespace rb_tree;
 
+struct SimpleNode {
+	SimpleNode() : value(DBL_MAX) {};
+	SimpleNode(double value) : value(value) {};
+	
+	double value;
+};
+
 void testRBTree() {
-	RBTree tree;
-	auto a = std::make_shared<SimpleRBNode>(10);
-	auto b = std::make_shared<SimpleRBNode>(7);
-	tree.insert(std::make_shared<SimpleRBNode>(12));
-	tree.insert(std::make_shared<SimpleRBNode>(11));
+	RBTree<SimpleNode> tree;
+	auto a = std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 10 });
+	auto b = std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 7 });
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 12 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 11 }));
 	tree.insert(a);
-	tree.insert(std::make_shared<SimpleRBNode>(9));
-	tree.insert(std::make_shared<SimpleRBNode>(8));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 9 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 8 }));
 	tree.insert(b);
-	tree.insert(std::make_shared<SimpleRBNode>(6));
-	tree.insert(std::make_shared<SimpleRBNode>(5));
-	tree.insert(std::make_shared<SimpleRBNode>(5));
-	tree.insert(std::make_shared<SimpleRBNode>(4));
-	tree.insert(std::make_shared<SimpleRBNode>(3));
-	tree.insert(std::make_shared<SimpleRBNode>(2));
-	tree.insert(std::make_shared<SimpleRBNode>(1));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 6 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 5 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 5 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 4 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 3 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 2 }));
+	tree.insert(std::make_shared<RBNode<SimpleNode>>(SimpleNode{ 1 }));
 	tree.printInorder();
 	tree.printPreorder();
 	PRINT("----------------------");

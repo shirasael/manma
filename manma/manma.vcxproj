@@ -118,12 +118,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Boxer.cpp" />
+    <ClCompile Include="BoxerNodes.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RBNode.cpp" />
     <ClCompile Include="RBTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="Boxer.h" />
+    <ClInclude Include="BoxerNodes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Output.h" />
     <ClInclude Include="RBNode.h" />
