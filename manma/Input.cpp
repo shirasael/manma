@@ -19,9 +19,9 @@ Input parse(const std::string& line) {
 	auto brac = line.find("(");
 	std::string cmd(line.substr(0, brac));
 	upper(cmd);
-	std::vector<int> args;
+	std::vector<double> args;
 	for (auto& s : split(line.substr(brac + 1, line.size() - 1), ',')) {
-		args.push_back(atoi(s.c_str()));
+		args.push_back(strtod(s.c_str(), nullptr));
 	}
 	return Input {
 		INPUT_CMD.at(cmd),

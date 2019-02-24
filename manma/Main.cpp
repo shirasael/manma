@@ -3,6 +3,7 @@
 #include "RBTree.h"
 #include <fstream>
 #include <sstream>
+#include "Heap.h"
 
 const int ARGS_COUNT = 2;
 
@@ -14,6 +15,25 @@ struct SimpleNode {
 	
 	double value;
 };
+
+void testHeap() {
+	heap::Heap<SimpleNode> heap;
+	heap.insert(SimpleNode{ 1.0 });
+	heap.insert(SimpleNode{ 2.0 });
+	heap.insert(SimpleNode{ 10.0 });
+	heap.insert(SimpleNode{ 4.0 });
+	heap.insert(SimpleNode{ 5.0 });
+	heap.insert(SimpleNode{ 14.0 });
+	heap.insert(SimpleNode{ 7.0 });
+	heap.insert(SimpleNode{ 8.0 });
+	heap.insert(SimpleNode{ 13.0 });
+
+	heap.displayHeap();
+
+	PRINT("Heap size: %d", heap.heapSize());
+
+	PRINT("Top: %f", heap.top().value);
+}
 
 void testRBTree() {
 	RBTree<SimpleNode> tree;
@@ -49,7 +69,8 @@ void testRBTree() {
 
 
 int main(int argc, char *argv[]) {
-	testRBTree();
+	// testRBTree();
+	testHeap();
 
 	if (argc != ARGS_COUNT) {
 		PRINT("Usage: manma.exe <input_file_path>");
@@ -65,16 +86,16 @@ int main(int argc, char *argv[]) {
 		Input input(parse(line));
 		switch (input.cmd) {
 		case InputCmd::Insert:
-			PRINT("Performing insert with side %d, heghit %d", input.args[0], input.args[1]);
+			PRINT("Performing insert with side %f, heghit %f", input.args[0], input.args[1]);
 			break;
 		case InputCmd::Remove:
-			PRINT("Performing remove with side %d, heghit %d", input.args[0], input.args[1]);
+			PRINT("Performing remove with side %f, heghit %f", input.args[0], input.args[1]);
 			break;
 		case InputCmd::Get:
-			PRINT("Performing get with side %d, heghit %d", input.args[0], input.args[1]);
+			PRINT("Performing get with side %f, heghit %f", input.args[0], input.args[1]);
 			break;
 		case InputCmd::Check:
-			PRINT("Performing check with side %d, heghit %d", input.args[0], input.args[1]);
+			PRINT("Performing check with side %f, heghit %f", input.args[0], input.args[1]);
 			break;
 		case InputCmd::Median:
 			PRINT("Performing get median");

@@ -29,7 +29,7 @@ const std::map<std::string, InputCmd> INPUT_CMD {
 
 struct Input {
 	const InputCmd cmd;
-	const std::vector<int> args;
+	const std::vector<double> args;
 };
 
 Input parse(const std::string& line);
