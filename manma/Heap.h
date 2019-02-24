@@ -8,21 +8,27 @@ using namespace std;
 
 namespace heap {
 
+	enum HeapType {
+		Maximum,
+		Minimum
+	};
+
 	template<typename T>
-	class Heap {
-
+	class Heap final {
 	public:
-		Heap();
-		virtual ~Heap() = default;
+		explicit Heap(HeapType type);
+		~Heap() = default;
 
-		void insert(T element);
+		void insert(const std::shared_ptr<T>& element);
+		void remove(const std::shared_ptr<T>& element);
 		void pop();
 		void displayHeap() const;
+		int indexOf(const T& element) const;
 
 		bool empty() const;
 
 		int heapSize() const;
-		T top() const;
+		std::shared_ptr<T> top() const;
 
 	private:
 		int parentIdx(int idxChild) const;
@@ -32,20 +38,38 @@ namespace heap {
 		void heapifyUp(int idx);
 		void heapifyDown(int idx);
 
-		vector<T> _heap;
+		vector<std::shared_ptr<T>> _heap;
+		HeapType _type;
 	};
 
 	template<typename T>
-	Heap<T>::Heap() {}
+	Heap<T>::Heap(HeapType type) : _type(type) {}
 
 	// Insert element into heap
 	template<typename T>
-	void Heap<T>::insert(T element) {
+	void Heap<T>::insert(const std::shared_ptr<T>& element) {
 		// insert the new element to the end of the vector
 		_heap.push_back(element);
 
 		// call heapify up on element index
 		heapifyUp(_heap.size() - 1);
+	}
+
+	template <typename T>
+	void Heap<T>::remove(const std::shared_ptr<T>& element) {
+		int idx = indexOf(*element);
+		if (idx == heapSize() - 1) {
+			_heap.pop_back();
+			return;
+		}
+		swap(_heap[idx], _heap[heapSize() - 1]);
+		_heap.pop_back();
+		if (idx != 0 && ((_type == Maximum && _heap[idx]->value > _heap[parentIdx(idx)]->value) || 
+			(_type == Minimum && _heap[idx]->value < _heap[parentIdx(idx)]->value))) {
+			heapifyUp(idx);
+		} else {
+			heapifyDown(idx);
+		}
 	}
 
 	// Remove element at root
@@ -66,7 +90,7 @@ namespace heap {
 
 	// Return element at root
 	template<typename T>
-	T Heap<T>::top() const {
+	std::shared_ptr<T> Heap<T>::top() const {
 		// if heap has no elemennts
 		if (_heap.size() == 0) {
 			throw std::exception("heap is empty - no element to return");
@@ -78,13 +102,23 @@ namespace heap {
 	// Display Heap
 	template<typename T>
 	void Heap<T>::displayHeap() const {
-		vector<T>::const_iterator pos = _heap.begin();
+		vector<std::shared_ptr<T>>::const_iterator pos = _heap.begin();
 		PRINT("Heap:");
 		while (pos != _heap.end()) {
-			cout << (*pos).value << " ";
+			cout << (*pos)->value << " ";
 			pos++;
 		}
 		cout << endl;
+	}
+
+	template <typename T>
+	int Heap<T>::indexOf(const T& element) const {
+		for (int i = 0; i < heapSize(); i++) {
+			if (element.value == _heap[i]->value) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	//  Check if heap is empty
@@ -125,10 +159,12 @@ namespace heap {
 	template<typename T>
 	void Heap<T>::heapifyUp(int idx) {
 		// check if node at idx and its parentIdx violets the heap properties
-		if (idx >= 0 && parentIdx(idx) >= 0 && _heap[parentIdx(idx)].value < _heap[idx].value) {
-			// swap them if heap property is violated
-			swap(_heap[idx], _heap[parentIdx(idx)]);
-
+		if (idx >= 0 && parentIdx(idx) >= 0) {
+			if (_type == Maximum && _heap[parentIdx(idx)]->value < _heap[idx]->value
+				|| _type == Minimum && _heap[parentIdx(idx)]->value > _heap[idx]->value) {
+				// swap them if heap property is violated
+				swap(_heap[idx], _heap[parentIdx(idx)]);
+			} 
 			// call heapify up on parentIdx
 			heapifyUp(parentIdx(idx));
 		}
@@ -144,10 +180,14 @@ namespace heap {
 		int max = idx;
 
 		// compare node at heap[idx] with its left and right childs and fint max value
-		if (lchild < _heap.size() && _heap[lchild].value > _heap[idx].value)
+		if (lchild < static_cast<int>(_heap.size()) && 
+			(_type == Maximum && _heap[lchild]->value > _heap[idx]->value || 
+			_type == Minimum && _heap[lchild]->value < _heap[idx]->value))
 			max = lchild;
 
-		if (rchild < _heap.size() && _heap[rchild].value > _heap[idx].value)
+		if (rchild < static_cast<int>(_heap.size()) &&
+			(_type == Maximum && _heap[rchild]->value > _heap[idx]->value || 
+			_type == Minimum && _heap[rchild]->value < _heap[idx]->value))
 			max = rchild;
 
 		// swap with the child that has the bigger value and call heapify down on child

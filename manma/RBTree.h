@@ -1,5 +1,7 @@
 #pragma once
 #include "RBNode.h"
+#include "Output.h"
+#include <functional>
 
 namespace rb_tree {
 
@@ -14,23 +16,33 @@ namespace rb_tree {
 		std::shared_ptr<RBNode<T>> search(double value) const;
 
 		std::shared_ptr<RBNode<T>> successor(const std::shared_ptr<RBNode<T>> x) const;
-		std::shared_ptr<RBNode<T>> treeMinimum(const std::shared_ptr<RBNode<T>> x) const;
-		std::shared_ptr<RBNode<T>> treeMaximum(const std::shared_ptr<RBNode<T>> x) const;
+		std::shared_ptr<RBNode<T>> minimum() const;
+		std::shared_ptr<RBNode<T>> maximum() const;
+
+		std::shared_ptr<RBNode<T>> closestTo(double value) const;
 
 		void printInorder() const;
 		void printPreorder() const;
 
+		void runInorder(std::function<void(const T&)> f) const;
+
+		bool isOnlyRoot() const;
+
 	private:
+		std::shared_ptr<RBNode<T>> treeMinimum(const std::shared_ptr<RBNode<T>> x) const;
+		std::shared_ptr<RBNode<T>> treeMaximum(const std::shared_ptr<RBNode<T>> x) const;
 
 		void rotateLeft(const std::shared_ptr<RBNode<T>> x);
 		void rotateRight(const std::shared_ptr<RBNode<T>> x);
 
 		void insertFixup(std::shared_ptr<RBNode<T>> z);
 		void removeFixup(std::shared_ptr<RBNode<T>> z);
+		
+		std::shared_ptr<RBNode<T>> closestTo(const std::shared_ptr<RBNode<T>>& x, double value) const;
 
-		void printInorder(const std::shared_ptr<RBNode<T>> x) const;
 		void printPreorder(const std::shared_ptr<RBNode<T>> x) const;
 
+		void runInorder(const std::shared_ptr<RBNode<T>> x, std::function<void(const T&)> f) const;
 
 	public:
 		std::shared_ptr<RBNode<T>> nil;
@@ -102,13 +114,23 @@ namespace rb_tree {
 	template<typename T>
 	void RBTree<T>::printInorder() const {
 		PRINT("Inorder:");
-		printInorder(root);
+		runInorder(root, [](const T& v) { PRINT("%f", v.value); });
 	}
 
 	template<typename T>
 	void RBTree<T>::printPreorder() const {
 		PRINT("Preorder:");
 		printPreorder(root);
+	}
+
+	template <typename T>
+	void RBTree<T>::runInorder(std::function<void(const T&)> f) const {
+		runInorder(root, f);
+	}
+
+	template <typename T>
+	bool RBTree<T>::isOnlyRoot() const {
+		return root != nil && root->right == nil && root->left == nil;
 	}
 
 	template<typename T>
@@ -136,6 +158,21 @@ namespace rb_tree {
 			y = y->parent;
 		}
 		return y;
+	}
+
+	template <typename T>
+	std::shared_ptr<RBNode<T>> RBTree<T>::minimum() const {
+		return treeMinimum(root);
+	}
+
+	template <typename T>
+	std::shared_ptr<RBNode<T>> RBTree<T>::maximum() const {
+		return treeMaximum(root);
+	}
+
+	template <typename T>
+	std::shared_ptr<RBNode<T>> RBTree<T>::closestTo(double value) const {
+		return closestTo(root, value);
 	}
 
 	template<typename T>
@@ -291,13 +328,25 @@ namespace rb_tree {
 		}
 	}
 
-	template<typename T>
-	void RBTree<T>::printInorder(const std::shared_ptr<RBNode<T>> x) const {
-		if (x != nil) {
-			printInorder(x->left);
-			PRINT("%f", x->getValue());
-			printInorder(x->right);
+	template <typename T>
+	std::shared_ptr<RBNode<T>> RBTree<T>::closestTo(const std::shared_ptr<RBNode<T>>& x, double value) const {
+		if (x == nil || x == nullptr) {
+			return nullptr;
 		}
+		if (x->getValue() == value) {
+			return x;
+		}
+		if (x->getValue() > value) {
+			auto k = closestTo(x->left, value);
+			if (k == nil || k == nullptr) {
+				return x;
+			}
+			return k;
+		}
+		if (x->getValue() < value) {
+			return closestTo(x->right, value);
+		}
+		return nullptr;
 	}
 
 	template<typename T>
@@ -306,6 +355,15 @@ namespace rb_tree {
 			PRINT("%f (Color: %d)", x->getValue(), x->color);
 			printPreorder(x->left);
 			printPreorder(x->right);
+		}
+	}
+
+	template <typename T>
+	void RBTree<T>::runInorder(const std::shared_ptr<RBNode<T>> x, std::function<void(const T&)> f) const {
+		if (x != nil) {
+			runInorder(x->left, f);
+			f(*x->data);
+			runInorder(x->right, f);
 		}
 	}
 }
