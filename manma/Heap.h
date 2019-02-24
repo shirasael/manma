@@ -17,17 +17,17 @@ namespace heap {
 
 		void insert(T element);
 		void pop();
-		void displayHeap();
+		void displayHeap() const;
 
-		bool empty();
+		bool empty() const;
 
-		int heapSize();
-		T top();
+		int heapSize() const;
+		T top() const;
 
 	private:
-		int parentIdx(int idxChild);
-		int leftChildIdx(int idxParent);
-		int rightChildIdx(int idxParent);
+		int parentIdx(int idxChild) const;
+		int leftChildIdx(int idxParent) const;
+		int rightChildIdx(int idxParent) const;
 
 		void heapifyUp(int idx);
 		void heapifyDown(int idx);
@@ -66,7 +66,7 @@ namespace heap {
 
 	// Return element at root
 	template<typename T>
-	T Heap<T>::top() {
+	T Heap<T>::top() const {
 		// if heap has no elemennts
 		if (_heap.size() == 0) {
 			throw std::exception("heap is empty - no element to return");
@@ -77,8 +77,8 @@ namespace heap {
 
 	// Display Heap
 	template<typename T>
-	void Heap<T>::displayHeap() {
-		vector<T>::iterator pos = _heap.begin();
+	void Heap<T>::displayHeap() const {
+		vector<T>::const_iterator pos = _heap.begin();
 		PRINT("Heap:");
 		while (pos != _heap.end()) {
 			cout << (*pos).value << " ";
@@ -89,21 +89,21 @@ namespace heap {
 
 	//  Check if heap is empty
 	template<typename T>
-	bool Heap<T>::empty() {
+	bool Heap<T>::empty() const {
 		return _heap.size() == 0;
 	}
 
 	// Return size of heap
 	template<typename T>
-	int Heap<T>::heapSize() {
+	int Heap<T>::heapSize() const {
 		return _heap.size();
 	}
 
 	// Return parentIdx location
 	template<typename T>
-	int Heap<T>::parentIdx(int child) {
-		int p = (child - 1) / 2;
-		if (child == 0)
+	int Heap<T>::parentIdx(int idxChild) const {
+		int p = (idxChild - 1) / 2;
+		if (idxChild == 0)
 			return -1;
 		else
 			return p;
@@ -111,13 +111,13 @@ namespace heap {
 
 	// Return parents' left child location
 	template<typename T>
-	int Heap<T>::leftChildIdx(int idxParent) {
+	int Heap<T>::leftChildIdx(int idxParent) const {
 		return (idxParent + 1) * 2 - 1;
 	}
 
 	// Return parents' right child location
 	template<typename T>
-	int Heap<T>::rightChildIdx(int idxParent) {
+	int Heap<T>::rightChildIdx(int idxParent) const {
 		return (idxParent + 1) * 2;
 	}
 
