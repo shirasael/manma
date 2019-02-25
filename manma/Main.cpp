@@ -20,7 +20,7 @@ void runGetBox(const boxer::Boxer& boxer, double side, double height) {
 }
 
 void runMedian(boxer::Boxer boxer) {
-	const auto median = boxer.getMeianBox();
+	const auto median = boxer.getMedianBox();
 	PRINT("Median box is box with side %f and height %f (volum: %f)", median->side, median->height, median->volum());
 }
 

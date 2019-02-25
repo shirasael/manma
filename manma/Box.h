@@ -3,6 +3,7 @@
 
 namespace boxer {
 
+	// A class of an object Box which has a side and height and the ability to calculate its volume
 	class Box final {
 	public:
 		explicit Box(double side, double height) : side(side), height(height) {};
@@ -24,6 +25,7 @@ namespace boxer {
 		double value;
 	};
 
+	// A class of object box that has a specific side value and a tree to represent all the heights possible for this side in the box storage
 	class SideBox final {
 	public:
 		explicit SideBox(const std::shared_ptr<Box>& box) : value(box->side) {};
@@ -33,6 +35,7 @@ namespace boxer {
 		rb_tree::RBTree<SimpleValue> heights;
 	};
 
+	// A class of object box that has a specific height value and a tree to represent all the sides possible for this side in the box storage
 	class HeightBox final {
 	public:
 		explicit HeightBox(const std::shared_ptr<Box>& box) : value(box->height) {};
@@ -42,6 +45,7 @@ namespace boxer {
 		rb_tree::RBTree<SimpleValue> sides;
 	};
 
+	// A class of object box that represents the volume of the box - will be used in the heap - heap of volume boxes
 	class HeapVolumBox final {
 	public:
 		explicit HeapVolumBox(const std::shared_ptr<Box>& box) : 
@@ -52,6 +56,7 @@ namespace boxer {
 		double value;
 	};
 
+	// A class of object box that represents the volume of the box will be used in a tree - tree of volume boxes
 	class TreeVolumBox final {
 	public:
 		explicit TreeVolumBox(const std::shared_ptr<HeapVolumBox>& vbox) :

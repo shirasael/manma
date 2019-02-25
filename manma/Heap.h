@@ -23,11 +23,12 @@ namespace heap {
 		void remove(const std::shared_ptr<T>& element);
 		void pop();
 		void displayHeap() const;
+
 		int indexOf(const T& element) const;
+		int heapSize() const;
 
 		bool empty() const;
 
-		int heapSize() const;
 		std::shared_ptr<T> top() const;
 
 	private:
@@ -55,13 +56,18 @@ namespace heap {
 		heapifyUp(_heap.size() - 1);
 	}
 
+	// remove specific element from heap
 	template <typename T>
 	void Heap<T>::remove(const std::shared_ptr<T>& element) {
+		// search index of element in heap
 		int idx = indexOf(*element);
+		// if element is in the end of heap remove it and return
 		if (idx == heapSize() - 1) {
 			_heap.pop_back();
 			return;
 		}
+		// if element is not in the end of heap swap between it and the element in the end of the heap
+		// remove the element from the end and heapify to order the heap
 		swap(_heap[idx], _heap[heapSize() - 1]);
 		_heap.pop_back();
 		if (idx != 0 && ((_type == Maximum && _heap[idx]->value > _heap[parentIdx(idx)]->value) || 
@@ -88,7 +94,7 @@ namespace heap {
 		}
 	}
 
-	// Return element at root
+	// Return element at root without removing it
 	template<typename T>
 	std::shared_ptr<T> Heap<T>::top() const {
 		// if heap has no elemennts
@@ -111,6 +117,7 @@ namespace heap {
 		cout << endl;
 	}
 
+	// get element and return its index in the heap
 	template <typename T>
 	int Heap<T>::indexOf(const T& element) const {
 		for (int i = 0; i < heapSize(); i++) {

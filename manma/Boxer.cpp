@@ -36,19 +36,23 @@ namespace boxer {
 	}
 
 	void Boxer::removeBox(const Box& box) {
+		// search in tree for box with given volume 
 		auto vbox = volums.search(box.volum());
 		if (vbox == nullptr) {
 			PRINT("Could not remove box - no such box in storage.")
 			return;
 		}
 
+		// find if vbox is the low heap or the high heap and remove it
 		if (lowVolums.indexOf(*vbox->data->vbox) >= 0) {
 			lowVolums.remove(vbox->data->vbox);
 		} else {
 			highVolums.remove(vbox->data->vbox);
 		}
+		
 		fixHeaps();
 
+		// remove box from tree of volumes
 		volums.remove(vbox);
 
 		// Remove data from sides rbtree
@@ -75,6 +79,8 @@ namespace boxer {
 	}
 
 	std::shared_ptr<Box> Boxer::getBox(const Box& box) const {
+		
+		// check if the box exists 
 		if (!checkBox(box)) {
 			return nullptr;
 		}
@@ -99,7 +105,7 @@ namespace boxer {
 		return found;
 	}
 
-	std::shared_ptr<Box> Boxer::getMeianBox() const {
+	std::shared_ptr<Box> Boxer::getMedianBox() const {
 		return lowVolums.top()->box;
 	}
 
