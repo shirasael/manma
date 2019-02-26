@@ -2,7 +2,8 @@
 #include <memory>
 
 namespace rb_tree {
-	enum class Color : int{
+
+	enum class Color : int {
 		Black,
 		Red
 	};

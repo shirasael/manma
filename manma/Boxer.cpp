@@ -18,8 +18,6 @@ namespace boxer {
 			fixHeaps();
 		} 
 
-		volums.insert(std::make_shared<RBNode<TreeVolumBox>>(TreeVolumBox{ vbox }));
-
 		auto side = sides.search(box->side);
 		if (side == nullptr) {
 			side = std::make_shared<RBNode<SideBox>>(SideBox{ box });

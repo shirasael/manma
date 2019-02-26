@@ -5,47 +5,117 @@
 
 namespace rb_tree {
 
+	/**
+	 * A class that represents a RB tree. The class is templated to the type of element
+	 * being held by the tree.
+	 * 
+	 * The tree is organized according to the values of the function `getValue()` of the elements in it.
+	 */
 	template<typename T>
 	class RBTree {
 	public:
+
+		/**
+		 * Construct an empty tree. 
+		 */
 		RBTree();
 		virtual ~RBTree() = default;
 
-		void insert(const std::shared_ptr<RBNode<T>> z);
+		/**
+		 * Insert a new element into the tree. 
+		 * As explaing the the teaching book, running time is O(logn).
+		 */
+		void insert(std::shared_ptr<RBNode<T>> z);
+
+		/**
+		 * Insert an existing element from the tree. 
+		 * As explaing the the teaching book, running time is O(logn).
+		 */
 		std::shared_ptr<RBNode<T>> remove(std::shared_ptr<RBNode<T>> z);
+
+		/**
+		 * Search an element in the tree with the given value.
+		 * As explaing the the teaching book, running time is O(logn).
+		 */
 		std::shared_ptr<RBNode<T>> search(double value) const;
 
-		std::shared_ptr<RBNode<T>> successor(const std::shared_ptr<RBNode<T>> x) const;
+		/**
+		 * Given an element in the tree, find its successor in the tree.
+		 * As explaing the the teaching book, running time is O(logn).
+		 */
+		std::shared_ptr<RBNode<T>> successor(std::shared_ptr<RBNode<T>> x) const;
+		
+		/**
+		 * Find the minimal / maximal element in the tree.
+		 * As explaing the the teaching book, in both cases running time is O(logn).
+		 */
 		std::shared_ptr<RBNode<T>> minimum() const;
 		std::shared_ptr<RBNode<T>> maximum() const;
 
+		/**
+		 * Find the element with the value higher-or-equals to the given value, which is also the element 
+		 * with the closest value to the given one.
+		 * For instance, if the tree contains elements with the values {1, 4.9, 6.5, 8, 3.4} and we call this 
+		 * function with the imput 5, the result would be 6.5.
+		 * 
+		 * The function runs recursivly from the top of the tree to its buttom, therefor the running time
+		 * of this procedure is also O(logn).
+		 */
 		std::shared_ptr<RBNode<T>> closestTo(double value) const;
 
+		/**
+		 * Print the tree using in-order strategy.
+		 * Running time: O(n).
+		 */
 		void printInorder() const;
+
+		/**
+		 * Print the tree using pre-order strategy.
+		 * Running time: O(n).
+		 */
 		void printPreorder() const;
 
+		/**
+		 * Run the given function in an in-order strategy, meaning iterate through the elements in the 
+		 * tree FROM SMALLSET TO LARGEST, and for each element run the given function.
+		 * 
+		 * Running time: O(n).
+		 */
 		void runInorder(std::function<void(const T&)> f) const;
 
+		/**
+		 * Check if the tree contains only one element (i.e, only the root element).
+		 * Running time: O(1).
+		 */
 		bool isOnlyRoot() const;
 
 	private:
-		std::shared_ptr<RBNode<T>> treeMinimum(const std::shared_ptr<RBNode<T>> x) const;
-		std::shared_ptr<RBNode<T>> treeMaximum(const std::shared_ptr<RBNode<T>> x) const;
+		// Helper function to get the maximum / minimum of a subtree in the tree rooting at x.
+		std::shared_ptr<RBNode<T>> treeMinimum(std::shared_ptr<RBNode<T>> x) const;
+		std::shared_ptr<RBNode<T>> treeMaximum(std::shared_ptr<RBNode<T>> x) const;
 
-		void rotateLeft(const std::shared_ptr<RBNode<T>> x);
-		void rotateRight(const std::shared_ptr<RBNode<T>> x);
+		// Rotate the tree left or right at the given node, as explained in the teaching book.
+		void rotateLeft(std::shared_ptr<RBNode<T>> x);
+		void rotateRight(std::shared_ptr<RBNode<T>> x);
 
+		// Perform fixup after insert / remove, as explained in the teaching book.
 		void insertFixup(std::shared_ptr<RBNode<T>> z);
 		void removeFixup(std::shared_ptr<RBNode<T>> z);
-		
-		std::shared_ptr<RBNode<T>> closestTo(const std::shared_ptr<RBNode<T>>& x, double value) const;
 
-		void printPreorder(const std::shared_ptr<RBNode<T>> x) const;
+		// Helper recursive function for `closetTo(double)`.
+		std::shared_ptr<RBNode<T>> closestTo(std::shared_ptr<RBNode<T>> x, double value) const;
 
-		void runInorder(const std::shared_ptr<RBNode<T>> x, std::function<void(const T&)> f) const;
+		// Helper recursive function for `printPreorder()`
+		void printPreorder(std::shared_ptr<RBNode<T>> x) const;
+
+		// Helper recursive function for `runInorder(std::function<void(const T&)>)`
+		void runInorder(std::shared_ptr<RBNode<T>> x, std::function<void(const T&)> f) const;
 
 	public:
+		// Nil sentinel of the tree. Contains no data.
 		std::shared_ptr<RBNode<T>> nil;
+
+		// Root element od the tree.
 		std::shared_ptr<RBNode<T>> root;
 	};
 
@@ -53,7 +123,7 @@ namespace rb_tree {
 	RBTree<T>::RBTree() : nil(std::make_shared<RBNode<T>>(T())), root(nil) {}
 
 	template<typename T>
-	void RBTree<T>::insert(const std::shared_ptr<RBNode<T>> z) {
+	void RBTree<T>::insert(std::shared_ptr<RBNode<T>> z) {
 		PRINT("Inserting %f", z->getValue());
 		std::shared_ptr<RBNode<T>> y;
 		auto x = root;
@@ -329,7 +399,7 @@ namespace rb_tree {
 	}
 
 	template <typename T>
-	std::shared_ptr<RBNode<T>> RBTree<T>::closestTo(const std::shared_ptr<RBNode<T>>& x, double value) const {
+	std::shared_ptr<RBNode<T>> RBTree<T>::closestTo(std::shared_ptr<RBNode<T>> x, double value) const {
 		if (x == nil || x == nullptr) {
 			return nullptr;
 		}
